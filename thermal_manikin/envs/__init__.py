@@ -1,0 +1,1 @@
+from thermal_manikin.envs.studio_test_env import StudioTestEnv

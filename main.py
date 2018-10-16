@@ -1,0 +1,110 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+
+import gym
+import time
+import numpy as np
+import thermal_manikin
+import QN.QN as QN
+import DoubleQN.DoubleQN as DoubleQN
+
+from lib import plotting
+import argparse
+import os
+
+
+
+def get_output_folder(parent_dir, env_name):
+    """Return save folder.
+
+    Assumes folders in the parent_dir have suffix -run{run
+    number}. Finds the highest run number and sets the output folder
+    to that number + 1. This is just convenient so that if you run the
+    same script multiple times tensorboard can plot all of the results
+    on the same plots with different names.
+
+    Parameters
+    ----------
+    parent_dir: str
+      Path of the directory containing all experiment runs.
+
+    Returns
+    -------
+    parent_dir/run_dir
+      Path to this run's save directory.
+    """
+    os.makedirs(parent_dir, exist_ok=True)
+    experiment_id = 0
+    for folder_name in os.listdir(parent_dir):
+        if not os.path.isdir(os.path.join(parent_dir, folder_name)):
+            continue
+        try:
+            folder_name = int(folder_name.split('-run')[-1])
+            if folder_name > experiment_id:
+                experiment_id = folder_name
+        except:
+            pass
+    experiment_id += 1
+
+    parent_dir = os.path.join(parent_dir, env_name)
+    parent_dir = parent_dir + '-run{}'.format(experiment_id)
+    return parent_dir
+
+
+def main():  
+    parser = argparse.ArgumentParser(description='Run Reinforcment Learning at an Office in Tsinghua University')
+    parser.add_argument('--env', default='manikin_control-v0', help='Environment name')
+    parser.add_argument('-o', '--output', default='studio_DDQNPE', help='Directory to save data to')
+    parser.add_argument('--num', default=1000, help='Number of Episodes')
+    parser.add_argument('--gamma', default=0.95, help='Discount Factor')
+    parser.add_argument('--alpha', default=0.5, help='Constant step-size parameter')
+    parser.add_argument('--epsilon', default=0.99, help='Epsilon greedy policy')
+    parser.add_argument('--epsilon_min', default=0.01, help='Smallest Epsilon that can get')
+    parser.add_argument('--epsilon_decay', default=0.9, help='Epsilon decay after the number of episodes')
+    parser.add_argument('--batch_size', default=32, help='Sampling batch size')
+    parser.add_argument('--lr', default=0.001, help='Learning rate')
+
+
+    args = parser.parse_args()
+
+    output = get_output_folder(args.output, args.env)
+
+  
+
+    #create environment
+    print(args.env)
+    env = gym.make(args.env)
+
+    ################# tabular Q learning ##########
+    #### change the environment to  _process_state_table before use it
+    # Q, stats = QL.q_learning(env, int(args.num), float(args.gamma), float(args.alpha), float(args.epsilon), 
+    #      float(args.epsilon_min),  float(args.epsilon_decay), output)
+    # plotting.plot_episode_stats(stats, smoothing_window=1)
+
+    # print(Q)
+
+    ############### Q learning with Ne # state_size = env.nS
+    # action_size = env.nA
+    # agent = QN.QNAgent(state_size, action_size, float(args.gamma), float(args.lr))
+    # stats = QN.q_learning(env, agent, int(args.num), int(args.batch_size),
+    #     float(args.epsilon), float(args.epsilon_min), float(args.epsilon_decay), output)
+    # plotting.plot_episode_stats(stats, smoothing_window=1)ural network approximation and fixed target ################
+    #### change the environment to  _process_state_DDQN before use it
+
+   
+
+    ############### Double Q neural network Learning ################
+    #### change the environment to  _process_state_DDQN before use it
+
+    state_size = env.nS
+    action_size = env.nA
+    agent = DoubleQN.DoubleQNAgent(state_size, action_size, float(args.gamma), float(args.lr))
+    stats = DoubleQN.q_learning(env, agent, int(args.num), int(args.batch_size),
+         float(args.epsilon), float(args.epsilon_min), float(args.epsilon_decay), output)
+    # plotting.plot_episode_stats(stats, smoothing_window=1)
+
+    #DoubleQN.evaluation(env, agent, output)
+
+if __name__ == '__main__':
+    main()
