@@ -11,12 +11,12 @@ import sys
 import csv
 import copy
 
-MAX_STEP = 200
+MAX_STEP = 100
 UPDATE_STEP = 30000
 
 
 class DoubleQNAgent:
-    def __init__(self, state_size, action_size,discount_factor, learning_rate):
+    def __init__(self, state_size, action_size, discount_factor, learning_rate):
         self.state_size = state_size
         self.action_size = action_size
         self.memory = deque(maxlen=2000)
@@ -52,7 +52,7 @@ class DoubleQNAgent:
         self.memory.append((state, action, reward, next_state, done))
 
 
-    def act(self, state,epsilon):
+    def act(self, state, epsilon):
         #self.step_count_total += 1
         if np.random.rand() <= epsilon:
             return random.randrange(self.action_size)
@@ -122,7 +122,7 @@ def q_learning(env, agent, num_episodes, batch_size, epsilon, epsilon_min, epsil
 
 
     for i_episode in range(num_episodes):
-        if epsilon > epsilon_min and i_episode > 500:
+        if epsilon > epsilon_min and i_episode > 600:
             # complete random exploration 500 episodes, 
             # then decrase exploration till epsilon less than epsilon_min
             epsilon *= epsilon_decay
@@ -179,8 +179,8 @@ def write_csv(folder, episode, step_num, average_score):
 
 
 def evaluation(env, agent, folder):
-    model = agent.load(folder + "_qn400.h5")
-    for Skin in np.linspace(32.17,35.7,100):
+    model = agent.load(folder + "_qn-final.h5")
+    for Skin in np.linspace(32.17,35.7,20):
         state = Skin
         print(state)
         state = env._process_state_DDQN(state)

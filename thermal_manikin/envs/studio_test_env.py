@@ -8,8 +8,8 @@ import csv
 import datetime
 
 # ref: https://github.com/openai/gym/tree/master/gym/envs
-Ta_max = 30
-Ta_min = 18
+Ta_max = 32
+Ta_min = 16
 Rh_max = 80
 Rh_min = 10
 Tskin_max = 35.76
@@ -118,7 +118,7 @@ class StudioTestEnv(gym.Env):
 
 	def _reset(self):
 		self.is_terminal = False
-		self.cur_Ta = np.random.choice([Ta_min, Ta_max])
+		self.cur_Ta = np.random.choice(np.arange(Ta_min, Ta_max))
 		self.cur_Rh  = np.random.choice(np.arange(Rh_min, Rh_max))
 		self.cur_Skin = skinTemperature().comfPierceSET(self.cur_Ta, self.cur_Ta, self.cur_Rh, 1.0)
 		#state = self._process_state_table(self.cur_Skin)

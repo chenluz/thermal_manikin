@@ -6,4 +6,6 @@ scikit-learn
 numpy
 tensorflow
 keras
+ipdb
+numba
 -e .

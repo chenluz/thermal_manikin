@@ -8,7 +8,7 @@ import numpy as np
 import thermal_manikin
 import QN.QN as QN
 import DoubleQN.DoubleQN as DoubleQN
-
+import DoubleQNPER.DoubleQNPER as DoubleQNPER
 from lib import plotting
 import argparse
 import os
@@ -54,9 +54,10 @@ def get_output_folder(parent_dir, env_name):
 
 def main():  
     parser = argparse.ArgumentParser(description='Run Reinforcment Learning at an Office in Tsinghua University')
-    parser.add_argument('--env', default='manikin_control-v0', help='Environment name')
-    parser.add_argument('-o', '--output', default='studio_DDQNPE', help='Directory to save data to')
+    parser.add_argument('--env', default='manikin_control-v1', help='Environment name')
+    parser.add_argument('-o', '--output', default='studio_DDQN', help='Directory to save data to')
     parser.add_argument('--num', default=1000, help='Number of Episodes')
+    parser.add_argument('--memory', default=2000, help='max size of replay memory')
     parser.add_argument('--gamma', default=0.95, help='Discount Factor')
     parser.add_argument('--alpha', default=0.5, help='Constant step-size parameter')
     parser.add_argument('--epsilon', default=0.99, help='Epsilon greedy policy')
@@ -75,15 +76,6 @@ def main():
     #create environment
     print(args.env)
     env = gym.make(args.env)
-
-    ################# tabular Q learning ##########
-    #### change the environment to  _process_state_table before use it
-    # Q, stats = QL.q_learning(env, int(args.num), float(args.gamma), float(args.alpha), float(args.epsilon), 
-    #      float(args.epsilon_min),  float(args.epsilon_decay), output)
-    # plotting.plot_episode_stats(stats, smoothing_window=1)
-
-    # print(Q)
-
     ############### Q learning with Ne # state_size = env.nS
     # action_size = env.nA
     # agent = QN.QNAgent(state_size, action_size, float(args.gamma), float(args.lr))
@@ -102,7 +94,7 @@ def main():
     agent = DoubleQN.DoubleQNAgent(state_size, action_size, float(args.gamma), float(args.lr))
     stats = DoubleQN.q_learning(env, agent, int(args.num), int(args.batch_size),
          float(args.epsilon), float(args.epsilon_min), float(args.epsilon_decay), output)
-    # plotting.plot_episode_stats(stats, smoothing_window=1)
+    plotting.plot_episode_stats(stats, smoothing_window=1)
 
     #DoubleQN.evaluation(env, agent, output)
 
