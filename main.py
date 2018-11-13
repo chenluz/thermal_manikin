@@ -8,7 +8,6 @@ import numpy as np
 import thermal_manikin
 import QN.QN as QN
 import DoubleQN.DoubleQN as DoubleQN
-import DoubleQNPER.DoubleQNPER as DoubleQNPER
 from lib import plotting
 import argparse
 import os
@@ -60,7 +59,7 @@ def main():
     parser.add_argument('--memory', default=2000, help='max size of replay memory')
     parser.add_argument('--gamma', default=0.95, help='Discount Factor')
     parser.add_argument('--alpha', default=0.5, help='Constant step-size parameter')
-    parser.add_argument('--epsilon', default=0.99, help='Epsilon greedy policy')
+    parser.add_argument('--epsilon', default=0.05, help='Epsilon greedy policy')
     parser.add_argument('--epsilon_min', default=0.01, help='Smallest Epsilon that can get')
     parser.add_argument('--epsilon_decay', default=0.9, help='Epsilon decay after the number of episodes')
     parser.add_argument('--batch_size', default=32, help='Sampling batch size')

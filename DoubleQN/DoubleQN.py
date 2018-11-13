@@ -122,7 +122,7 @@ def q_learning(env, agent, num_episodes, batch_size, epsilon, epsilon_min, epsil
 
 
     for i_episode in range(num_episodes):
-        if epsilon > epsilon_min and i_episode > 600:
+        if epsilon > epsilon_min and i_episode > 2000:
             # complete random exploration 500 episodes, 
             # then decrase exploration till epsilon less than epsilon_min
             epsilon *= epsilon_decay
