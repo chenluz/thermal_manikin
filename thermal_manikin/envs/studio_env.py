@@ -51,7 +51,7 @@ class StudioEnv(gym.Env):
 		# get mean skin temperature after action
 		self.cur_Skin = self.mainkin.get_latest_MST()
 		print("MST:" + str(self.cur_Skin))
-		print("reward:" + str(reward))
+		print("reward:" + str(self.reward))
 		state = self._process_state_DDQN(self.cur_Skin)
 		self.reward = self._process_reward(self.cur_Skin)
 
